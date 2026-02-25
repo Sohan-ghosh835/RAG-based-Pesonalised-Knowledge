@@ -59,13 +59,27 @@ with st.sidebar:
                 except Exception as e:
                     st.error(f"Discovery Error: {str(e)}")
             
+            if st.button("Test Embedding"):
+                try:
+                    from backend.core.vector_store import get_vector_store
+                    vs = get_vector_store()
+                    test_vec = vs.embedding_function.embed_query("test")
+                    st.success(f"Embedding successful! Vector size: {len(test_vec)}")
+                except Exception as e:
+                    st.error(f"Embedding Error: {str(e)}")
+
             st.write("---")
             st.write("**Vector Store Status:**")
             try:
-                from backend.core.vector_store import get_vector_store
+                from backend.core.vector_store import get_vector_store, wipe_vector_store
                 vs = get_vector_store()
                 count = vs._collection.count()
                 st.write(f"- Total documents in index: `{count}`")
+                
+                if st.button("Wipe Database", type="secondary"):
+                    wipe_vector_store()
+                    st.warning("Database wiped! Please re-index your files.")
+                    st.rerun()
             except Exception as e:
                 st.write(f"- Vector Store Error: {str(e)}")
         else:

@@ -11,7 +11,8 @@ def get_vector_store():
         
     embeddings = GoogleGenerativeAIEmbeddings(
         model="models/gemini-embedding-001",
-        google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
+        google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY")),
+        task_type="retrieval_document"
     )
     vector_store = Chroma(
         collection_name="pkaa_collection",
@@ -31,3 +32,8 @@ def source_exists(source_name: str):
     vector_store = get_vector_store()
     docs = vector_store.get(where={"source": source_name}, limit=1)
     return len(docs["ids"]) > 0
+
+def wipe_vector_store():
+    vector_store = get_vector_store()
+    vector_store.delete_collection()
+    return True
