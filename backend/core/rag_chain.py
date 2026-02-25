@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from langchain.chains import ConversationalRetrievalChain
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import PromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
 from langchain.retrievers.multi_query import MultiQueryRetriever
@@ -24,10 +24,10 @@ user_memory = ConversationBufferMemory(
 )
 
 def get_rag_chain():
-    llm = ChatOpenAI(
-        model_name="gpt-3.5-turbo", 
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-1.5-pro", 
         temperature=0,
-        openai_api_key=st.secrets.get("OPENAI_API_KEY", os.environ.get("OPENAI_API_KEY"))
+        google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
     )
     vector_store = get_vector_store()
     

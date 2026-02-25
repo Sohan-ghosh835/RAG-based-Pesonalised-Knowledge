@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 def get_vector_store():
     if "CHROMA_PERSIST_DIR" in st.secrets:
@@ -9,8 +9,9 @@ def get_vector_store():
     else:
         persist_directory = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
         
-    embeddings = OpenAIEmbeddings(
-        openai_api_key=st.secrets.get("OPENAI_API_KEY", os.environ.get("OPENAI_API_KEY"))
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
     )
     vector_store = Chroma(
         collection_name="pkaa_collection",
