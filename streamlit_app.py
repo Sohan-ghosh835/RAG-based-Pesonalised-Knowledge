@@ -1,7 +1,16 @@
 import streamlit as st
 import os
-from dotenv import load_dotenv
+import sys
 
+try:
+    import langchain
+    import langchain_google_genai
+except ImportError as e:
+    st.error(f"Installation Error: {e}")
+    st.info("Please try: Manage App > ... > Clear Cache and Deploy")
+    st.stop()
+
+from dotenv import load_dotenv
 load_dotenv()
 
 from backend.core.rag_chain import query_rag
