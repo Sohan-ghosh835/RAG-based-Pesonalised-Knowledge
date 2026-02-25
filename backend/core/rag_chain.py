@@ -25,7 +25,7 @@ user_memory = ConversationBufferMemory(
 
 def get_rag_chain():
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash", 
+        model="gemini-pro", 
         temperature=0,
         google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
     )
