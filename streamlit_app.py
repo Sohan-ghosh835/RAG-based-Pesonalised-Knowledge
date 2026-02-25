@@ -49,7 +49,6 @@ with st.sidebar:
         if api_key:
             st.write(f"**API Key status:** Found (starts with {api_key[:5]}...)")
             
-            # Direct model discovery using genai
             if st.button("List Gemini Models"):
                 try:
                     genai.configure(api_key=api_key)
