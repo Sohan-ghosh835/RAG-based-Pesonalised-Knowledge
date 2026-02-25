@@ -1,7 +1,5 @@
 streamlit
-fastapi
-uvicorn
-langchain>=0.1.0
+langchain
 langchain-openai
 langchain-community
 chromadb
