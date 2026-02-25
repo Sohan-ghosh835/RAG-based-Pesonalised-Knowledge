@@ -63,8 +63,13 @@ with st.sidebar:
                 try:
                     from backend.core.vector_store import get_vector_store
                     vs = get_vector_store()
-                    test_vec = vs.embedding_function.embed_query("test")
-                    st.success(f"Embedding successful! Vector size: {len(test_vec)}")
+                    # Try both variants of attribute name
+                    emb_fn = getattr(vs, "embedding_function", getattr(vs, "_embedding_function", None))
+                    if emb_fn:
+                        test_vec = emb_fn.embed_query("test")
+                        st.success(f"Embedding successful! Vector size: {len(test_vec)}")
+                    else:
+                        st.error("Could not find embedding function in Chroma object.")
                 except Exception as e:
                     st.error(f"Embedding Error: {str(e)}")
 
@@ -96,11 +101,17 @@ with st.sidebar:
                 with open(temp_path, "wb") as buffer:
                     buffer.write(f.getvalue())
                 try:
-                    process_pdf(temp_path, f.name)
+                    result = process_pdf(temp_path, f.name)
+                    if result == "already_indexed":
+                        st.info(f"'{f.name}' is already indexed.")
+                    else:
+                        st.success(f"'{f.name}' indexed successfully!")
+                except Exception as e:
+                    st.error(f"Failed to index '{f.name}': {str(e)}")
                 finally:
                     if os.path.exists(temp_path):
                         os.remove(temp_path)
-            st.success("PDFs indexed successfully!")
+            st.rerun()
 
     st.divider()
     
