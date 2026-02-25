@@ -1,10 +1,10 @@
 import os
 import streamlit as st
-from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
+from langchain.chains import ConversationalRetrievalChain
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import PromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
-from langchain_community.retrievers import MultiQueryRetriever
+from langchain.retrievers.multi_query import MultiQueryRetriever
 from backend.core.vector_store import get_vector_store
 
 system_template = """You are a personal knowledge AI assistant. Only answer using the retrieved context. If the answer is not present, say 'Information not found in your data.' Do not fabricate information.
