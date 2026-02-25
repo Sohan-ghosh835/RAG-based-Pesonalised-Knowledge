@@ -27,10 +27,7 @@ from backend.ingestion.drive_loader import process_drive
 st.set_page_config(page_title="PKAA Portfolio Demo", layout="wide")
 
 st.title("PKAA: Personal Knowledge AI Agent")
-st.markdown("""
-### Portfolio Demonstration Version
-Connect your PDFs, websites, or Google services to build a private knowledge base.
-""")
+st.markdown("Connect your PDFs, websites, or Google services to build a private knowledge base.")
 
 with st.sidebar:
     st.header("Ingestion Dashboard")
