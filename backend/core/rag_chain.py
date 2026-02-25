@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
@@ -24,7 +25,7 @@ user_memory = ConversationBufferMemory(
 
 def get_rag_chain():
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-pro", 
+        model="gemini-1.5-flash", 
         temperature=0,
         google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
     )
@@ -50,5 +51,3 @@ def query_rag(query: str):
     chain = get_rag_chain()
     response = chain.invoke({"question": query})
     return response
-
-from langchain_google_genai import ChatGoogleGenerativeAI
