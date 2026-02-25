@@ -1,0 +1,32 @@
+import os
+import streamlit as st
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+
+def get_vector_store():
+    if "CHROMA_PERSIST_DIR" in st.secrets:
+        persist_directory = st.secrets["CHROMA_PERSIST_DIR"]
+    else:
+        persist_directory = os.environ.get("CHROMA_PERSIST_DIR", "./chroma_db")
+        
+    embeddings = OpenAIEmbeddings(
+        openai_api_key=st.secrets.get("OPENAI_API_KEY", os.environ.get("OPENAI_API_KEY"))
+    )
+    vector_store = Chroma(
+        collection_name="pkaa_collection",
+        embedding_function=embeddings,
+        persist_directory=persist_directory
+    )
+    return vector_store
+
+def delete_source(source_name: str):
+    vector_store = get_vector_store()
+    docs = vector_store.get(where={"source": source_name})
+    if docs["ids"]:
+        vector_store.delete(ids=docs["ids"])
+    return len(docs["ids"])
+
+def source_exists(source_name: str):
+    vector_store = get_vector_store()
+    docs = vector_store.get(where={"source": source_name}, limit=1)
+    return len(docs["ids"]) > 0
