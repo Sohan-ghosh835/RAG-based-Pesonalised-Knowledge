@@ -1,10 +1,14 @@
 import streamlit as st
 import os
 import sys
+import importlib.metadata
 
+# Basic Diagnostic Check
 try:
     import langchain
     import langchain_google_genai
+    import langchain_community
+    import langchain_core
 except ImportError as e:
     st.error(f"Installation Error: {e}")
     st.info("Please try: Manage App > ... > Clear Cache and Deploy")
@@ -25,13 +29,30 @@ st.set_page_config(page_title="PKAA Portfolio Demo", layout="wide")
 st.title("PKAA: Personal Knowledge AI Agent")
 st.markdown("""
 ### Portfolio Demonstration Version
-This is a monolithic version of the PKAA agent designed for Streamlit Community Cloud. 
 Connect your PDFs, websites, or Google services to build a private knowledge base.
 """)
 
 with st.sidebar:
     st.header("Ingestion Dashboard")
     
+    # Advanced Diagnostics for Debugging
+    if st.checkbox("Show System Diagnostics"):
+        st.write("---")
+        st.write("**Package Versions:**")
+        packages = ["streamlit", "langchain", "langchain-google-genai", "langchain-community", "langchain-core", "chromadb"]
+        for p in packages:
+            try:
+                st.write(f"- {p}: {importlib.metadata.version(p)}")
+            except:
+                st.write(f"- {p}: Not found")
+        
+        api_key = st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY", ""))
+        if api_key:
+            st.write(f"**API Key status:** Found (starts with {api_key[:5]}...)")
+        else:
+            st.error("**API Key status:** NOT FOUND")
+        st.write("---")
+
     st.subheader("Upload PDFs")
     uploaded_files = st.file_uploader("Choose PDF files", accept_multiple_files=True, type=['pdf'])
     if st.button("Index PDFs") and uploaded_files:

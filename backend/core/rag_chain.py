@@ -4,7 +4,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
-from langchain.retrievers.multi_query import MultiQueryRetriever
+from langchain_community.retrievers import MultiQueryRetriever
 from backend.core.vector_store import get_vector_store
 
 system_template = """You are a personal knowledge AI assistant. Only answer using the retrieved context. If the answer is not present, say 'Information not found in your data.' Do not fabricate information.
@@ -24,10 +24,15 @@ user_memory = ConversationBufferMemory(
 )
 
 def get_rag_chain():
+    api_key = st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
+    
+    if not api_key:
+        raise ValueError("Missing GOOGLE_API_KEY. Please add it to your Streamlit Secrets.")
+
     llm = ChatGoogleGenerativeAI(
-        model="gemini-pro", 
+        model="gemini-1.5-flash",
         temperature=0,
-        google_api_key=st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
+        google_api_key=api_key
     )
     vector_store = get_vector_store()
     
