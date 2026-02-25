@@ -58,6 +58,16 @@ with st.sidebar:
                         st.write(f"- `{m.name}`")
                 except Exception as e:
                     st.error(f"Discovery Error: {str(e)}")
+            
+            st.write("---")
+            st.write("**Vector Store Status:**")
+            try:
+                from backend.core.vector_store import get_vector_store
+                vs = get_vector_store()
+                count = vs._collection.count()
+                st.write(f"- Total documents in index: `{count}`")
+            except Exception as e:
+                st.write(f"- Vector Store Error: {str(e)}")
         else:
             st.error("**API Key status:** NOT FOUND")
         st.write("---")

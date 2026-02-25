@@ -25,9 +25,8 @@ user_memory = ConversationBufferMemory(
 
 def get_rag_chain():
     api_key = st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY"))
-    
     if not api_key:
-        raise ValueError("Missing GOOGLE_API_KEY. Please add it to your Streamlit Secrets.")
+        raise ValueError("Missing GOOGLE_API_KEY")
 
     llm = ChatGoogleGenerativeAI(
         model="gemini-flash-latest",
@@ -36,11 +35,7 @@ def get_rag_chain():
     )
     vector_store = get_vector_store()
     
-    base_retriever = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": 5})
-    
-    retriever = MultiQueryRetriever.from_llm(
-        retriever=base_retriever, llm=llm
-    )
+    retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 5})
     
     chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
