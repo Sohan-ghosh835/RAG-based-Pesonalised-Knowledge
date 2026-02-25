@@ -2,8 +2,10 @@ import streamlit as st
 import os
 import sys
 import importlib.metadata
+from dotenv import load_dotenv
 
-# Basic Diagnostic Check
+load_dotenv()
+
 try:
     import langchain
     import langchain_google_genai
@@ -13,9 +15,6 @@ except ImportError as e:
     st.error(f"Installation Error: {e}")
     st.info("Please try: Manage App > ... > Clear Cache and Deploy")
     st.stop()
-
-from dotenv import load_dotenv
-load_dotenv()
 
 from backend.core.rag_chain import query_rag
 from backend.core.vector_store import delete_source
@@ -35,7 +34,6 @@ Connect your PDFs, websites, or Google services to build a private knowledge bas
 with st.sidebar:
     st.header("Ingestion Dashboard")
     
-    # Advanced Diagnostics for Debugging
     if st.checkbox("Show System Diagnostics"):
         st.write("---")
         st.write("**Package Versions:**")
