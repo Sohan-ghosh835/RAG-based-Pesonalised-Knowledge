@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from langchain.chains import ConversationalRetrievalChain
+from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import PromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
