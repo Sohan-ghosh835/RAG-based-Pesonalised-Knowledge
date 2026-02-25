@@ -1,9 +1,8 @@
 import os
 import streamlit as st
 from langchain.chains import ConversationalRetrievalChain
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.memory import ConversationBufferMemory
-from langchain_core.prompts import PromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from backend.core.vector_store import get_vector_store
 
@@ -51,3 +50,5 @@ def query_rag(query: str):
     chain = get_rag_chain()
     response = chain.invoke({"question": query})
     return response
+
+from langchain_google_genai import ChatGoogleGenerativeAI
