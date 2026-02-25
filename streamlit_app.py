@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import sys
 import importlib.metadata
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -47,6 +48,16 @@ with st.sidebar:
         api_key = st.secrets.get("GOOGLE_API_KEY", os.environ.get("GOOGLE_API_KEY", ""))
         if api_key:
             st.write(f"**API Key status:** Found (starts with {api_key[:5]}...)")
+            
+            if st.button("List Available Models"):
+                try:
+                    genai.configure(api_key=api_key)
+                    models = genai.list_models()
+                    st.write("**Available Models for your Key:**")
+                    for m in models:
+                        st.write(f"- `{m.name}`")
+                except Exception as e:
+                    st.error(f"Model Discovery Failed: {str(e)}")
         else:
             st.error("**API Key status:** NOT FOUND")
         st.write("---")

@@ -29,6 +29,7 @@ def get_rag_chain():
     if not api_key:
         raise ValueError("Missing GOOGLE_API_KEY. Please add it to your Streamlit Secrets.")
 
+    # Using 'gemini-1.5-flash-latest' which is often more robust against v1beta errors
     llm = ChatGoogleGenerativeAI(
         model="gemini-1.5-flash",
         temperature=0,
