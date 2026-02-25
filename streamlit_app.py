@@ -49,7 +49,8 @@ with st.sidebar:
         if api_key:
             st.write(f"**API Key status:** Found (starts with {api_key[:5]}...)")
             
-            if st.button("List Available Models"):
+            # Direct model discovery using genai
+            if st.button("List Gemini Models"):
                 try:
                     genai.configure(api_key=api_key)
                     models = genai.list_models()
@@ -57,7 +58,7 @@ with st.sidebar:
                     for m in models:
                         st.write(f"- `{m.name}`")
                 except Exception as e:
-                    st.error(f"Model Discovery Failed: {str(e)}")
+                    st.error(f"Discovery Error: {str(e)}")
         else:
             st.error("**API Key status:** NOT FOUND")
         st.write("---")
