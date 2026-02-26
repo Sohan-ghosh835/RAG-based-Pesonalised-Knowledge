@@ -28,26 +28,38 @@ def get_rag_chain():
     if not api_key:
         raise ValueError("Missing GOOGLE_API_KEY")
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-flash-latest",
-        temperature=0,
-        google_api_key=api_key
-    )
-    vector_store = get_vector_store()
-    
-    retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 5})
-    
-    chain = ConversationalRetrievalChain.from_llm(
-        llm=llm,
-        retriever=retriever,
-        memory=user_memory,
-        return_source_documents=True,
-        combine_docs_chain_kwargs={"prompt": qa_prompt},
-        verbose=True
-    )
-    return chain
+    try:
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            temperature=0,
+            google_api_key=api_key
+        )
+        vector_store = get_vector_store()
+        
+        retriever = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 5})
+        
+        chain = ConversationalRetrievalChain.from_llm(
+            llm=llm,
+            retriever=retriever,
+            memory=user_memory,
+            return_source_documents=True,
+            combine_docs_chain_kwargs={"prompt": qa_prompt},
+            verbose=True
+        )
+        return chain
+    except Exception as e:
+        st.error(f"Failed to initialize RAG chain: {str(e)}")
+        raise e
 
 def query_rag(query: str):
-    chain = get_rag_chain()
-    response = chain.invoke({"question": query})
-    return response
+    try:
+        chain = get_rag_chain()
+        response = chain.invoke({"question": query})
+        return response
+    except Exception as e:
+        if "429" in str(e) or "quota" in str(e).lower():
+            return {
+                "answer": "⚠️ **Quota Exceeded:** You have reached the API limit for today (20 requests/day on the current tier). Please try again tomorrow or check your plan in Google AI Studio.",
+                "source_documents": []
+            }
+        raise e
