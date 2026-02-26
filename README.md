@@ -1,5 +1,7 @@
 # PKAA: Personal Knowledge AI Agent
 
+Live Application: [PKAA Portfolio Demo](https://rag-based-pesonalised-knowledge-cb6mdbalkwud4bxs642zhp.streamlit.app/)
+
 PKAA is a Retrieval-Augmented Generation (RAG) application that allows you to create a private knowledge base from various data sources and interact with it using Google Gemini models.
 
 ## Features
